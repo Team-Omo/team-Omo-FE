@@ -195,15 +195,33 @@ const ResultList = styled.div`
   justify-content: start;
   align-items: start;
   width: 100%;
-  height: 300px;
+  height: 200px;
   overflow: scroll;
 
   background: ${({ theme }) => theme.color.cardBg};
   border-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.color.border2};
+    border-radius: 20px;
+    border: 5px solid ${({ theme }) => theme.color.bg};
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-button:start:decrement,
+  &::-webkit-scrollbar-button:end:increment {
+    display: block;
+    height: 8px;
+    background-color: transparent;
+  }
 `;
 
 const ResultItemContainer = styled.div`
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;

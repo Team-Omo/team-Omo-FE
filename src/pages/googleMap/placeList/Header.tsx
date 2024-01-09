@@ -16,12 +16,12 @@ const Header = () => {
       >
         둘러보기
       </Category>
-      <Category
+      {/* <Category
         $selected={isSelected === '인기 장소'}
         onClick={() => changeCategory('인기 장소')}
       >
         인기 게시글
-      </Category>
+      </Category> */}
     </Base>
   );
 };

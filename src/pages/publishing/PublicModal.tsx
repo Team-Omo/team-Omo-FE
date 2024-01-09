@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import ConfirmModal from './ConfirmModal';
 import { SelectedInfoType } from '../../model/interface';
 import SubModal from '../../components/Modal/SubModal';
 import usePostContentMutate from '../../hooks/reactQuery/post/usePostContentQuery';
-import toast from 'react-hot-toast';
 import Button from '../../components/button/Button';
 import { validatePublishing } from '../../utils/validationPublishing';
-import { postLoading } from '../../components/alert/postAlert';
 import ImageUpload from './ImageUpload';
 import SearchPlace from './SearchPlace';
 import PostTextArea from '../../components/textarea/PostTextArea';
@@ -50,7 +48,7 @@ const PublicModal: React.FC<Props> = ({
     google.maps.places.PlaceResult[] | null
   >(null);
 
-  const { postContentMutate, isPostContentLoading } = usePostContentMutate();
+  const { postContentMutate } = usePostContentMutate();
 
   const clearPostHandler = (
     e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
@@ -160,15 +158,22 @@ const Base = styled.div`
   border-radius: 16px;
   overflow-y: scroll;
   &::-webkit-scrollbar {
-    width: 5px;
+    width: 15px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.color.border};
+    background-color: ${({ theme }) => theme.color.border2};
     border-radius: 20px;
+    border: 5px solid ${({ theme }) => theme.color.bg};
   }
 
   &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-button:start:decrement,
+  &::-webkit-scrollbar-button:end:increment {
+    display: block;
+    height: 8px;
     background-color: transparent;
   }
 `;
