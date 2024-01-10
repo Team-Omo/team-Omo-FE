@@ -1,30 +1,27 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
 import { BookmarkIcon } from '../../../assets/icons/BookMark';
-import useBookMarkPlaceStore from '../../../store/location/bookMarkPlaceStore';
-import toast from 'react-hot-toast';
 
-const BookMarkLocationButton = () => {
-  const currentUser = sessionStorage.getItem('userId');
+interface Props {
+  toggleBookMarkerHandler?: () => void;
+  position?: string;
+}
 
-  const { isShowBookMarkPlace, toggleBookmarkDisplay } =
-    useBookMarkPlaceStore();
+const BookMarkLocationButton = (props: Props) => {
+  const [isShowBookMarkPlace, setIsShowBookMarkPlace] =
+    useState<boolean>(false);
+  const { toggleBookMarkerHandler, position } = props;
 
   const onClickBtnHandler = () => {
-    if (!currentUser) {
-      toast.error('로그인 후 이용해주세요.', {
-        position: 'bottom-right',
-        duration: 4000,
-      });
-      return;
-    }
-    toggleBookmarkDisplay();
+    toggleBookMarkerHandler && toggleBookMarkerHandler();
+    setIsShowBookMarkPlace(!isShowBookMarkPlace);
   };
 
   return (
     <BtnWrapper
       $isShowBookMarkPlace={isShowBookMarkPlace}
       onClick={onClickBtnHandler}
+      $position={position}
     >
       <BookmarkIcon isShowBookMarkPlace={isShowBookMarkPlace} />
     </BtnWrapper>
@@ -33,11 +30,22 @@ const BookMarkLocationButton = () => {
 
 export default BookMarkLocationButton;
 
-const BtnWrapper = styled.div<{ $isShowBookMarkPlace: boolean }>`
+interface BtnWrapperProps {
+  $isShowBookMarkPlace: boolean;
+  $position?: string;
+}
+
+const BtnWrapper = styled.div<BtnWrapperProps>`
   z-index: 3;
-  position: absolute;
-  right: 45px;
-  top: 40px;
+
+  ${({ $position }) =>
+    $position === 'map'
+      ? css`
+          position: absolute;
+          right: 45px;
+          top: 40px;
+        `
+      : css`null`};
 
   display: flex;
   justify-content: center;

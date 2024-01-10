@@ -15,6 +15,10 @@ import DividingPointIcon from '../../../assets/icons/DividingPointIcon';
 import DownArrow from '../../../assets/icons/DownArrow';
 import PhoneIcon from '../../../assets/icons/PhoneIcon';
 import { MoonLoader } from 'react-spinners';
+import useGetBookmarkQuery from '../../../hooks/reactQuery/bookmark/useGetBookmarkQuery';
+import usePostBookmarkMutation from '../../../hooks/reactQuery/bookmark/usePostBookmarkMutation';
+import useDeleteBookmarkMutation from '../../../hooks/reactQuery/bookmark/useDeleteBookmarkMutation';
+import toast from 'react-hot-toast';
 
 interface Props {
   selectedPlace: SelectedPlaceType | null;
@@ -28,14 +32,51 @@ const DetailList: React.FC<Props> = ({ selectedPlace }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const detailToggleHandler = () => {
-    setIsOpen(!isOpen);
-  };
+  const userId = sessionStorage.getItem('userId');
+
+  const {
+    data,
+    refetch: getBookmarkRefetch,
+    isLoading: getBookmarkLoading,
+    isFetching: getBookmarkFetching,
+  } = useGetBookmarkQuery(userId);
+
+  const { postBookmarkingMutate } = usePostBookmarkMutation(locationId);
+  const { deletebookmarkingMutate } = useDeleteBookmarkMutation(locationId);
+
   const { data: posts, refetch } = useGetLocationPostsQuery(
     locationId,
     latitude,
     longitude,
   );
+
+  const activateBookmarkHandler = () => {
+    if (getBookmarkFetching || getBookmarkLoading) return;
+    if (!userId)
+      return toast.error('로그인 후 이용해주세요.', {
+        position: 'bottom-right',
+        duration: 4000,
+      });
+    postBookmarkingMutate({ locationId });
+  };
+
+  const deActivateBookmarkHandler = () => {
+    if (getBookmarkFetching || getBookmarkLoading) return;
+    if (!userId)
+      return toast.error('로그인 후 이용해주세요.', {
+        position: 'bottom-right',
+        duration: 4000,
+      });
+    deletebookmarkingMutate({ locationId });
+  };
+
+  const detailToggleHandler = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    userId && getBookmarkRefetch();
+  }, [userId]);
 
   useEffect(() => {
     if (!locationId) return;
@@ -126,7 +167,15 @@ const DetailList: React.FC<Props> = ({ selectedPlace }) => {
           </span>
         </InfoContainer>
         <BookMarContainer>
-          <BookMarkButton locationId={locationId} top="50px" left="160px" />
+          <BookMarkButton
+            activateBookmarkHandler={activateBookmarkHandler}
+            deActivateBookmarkHandler={deActivateBookmarkHandler}
+            getBookmarkLoading={getBookmarkLoading}
+            getBookmarkFetching={getBookmarkFetching}
+            data={data}
+            locationId={locationId}
+            position="map"
+          />
         </BookMarContainer>
         <ContentsSection posts={posts} />
       </BodyContainer>

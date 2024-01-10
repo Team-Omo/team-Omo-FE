@@ -1,19 +1,21 @@
 import React from 'react';
 import { LuPlus } from 'react-icons/lu';
 import { LuMinus } from 'react-icons/lu';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 interface Props {
   downMapLevelHandler: () => void;
   upMapLevelHandler: () => void;
+  position?: string;
 }
 
 const LevelButton: React.FC<Props> = ({
   downMapLevelHandler,
   upMapLevelHandler,
+  position,
 }) => {
   return (
-    <Base>
+    <Base $position={position}>
       <BtnWrapper onClick={upMapLevelHandler}>
         <LuPlus />
       </BtnWrapper>
@@ -26,16 +28,23 @@ const LevelButton: React.FC<Props> = ({
 
 export default LevelButton;
 
-const Base = styled.div`
+const Base = styled.div<{ $position?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  position: absolute;
-  right: 45px;
-  top: 140px;
-  z-index: 2;
+  ${({ $position }) =>
+    $position
+      ? css`
+          position: absolute;
+          right: 45px;
+          top: 140px;
+          z-index: 2;
+        `
+      : css`
+          null
+      `}
 `;
 
 const BtnWrapper = styled.div`

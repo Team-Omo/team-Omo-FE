@@ -5,12 +5,12 @@ import ConfirmModal from './ConfirmModal';
 import { SelectedInfoType } from '../../model/interface';
 import SubModal from '../../components/Modal/SubModal';
 import usePostContentMutate from '../../hooks/reactQuery/post/usePostContentQuery';
-import Button from '../../components/button/Button';
 import { validatePublishing } from '../../utils/validationPublishing';
 import ImageUpload from './ImageUpload';
 import SearchPlace from './SearchPlace';
 import PostTextArea from '../../components/textarea/PostTextArea';
 import StarButton from '../../components/button/StarButton';
+import FillButton from '../../components/button/FillButton';
 
 interface Props {
   closeMainModal: (
@@ -91,6 +91,10 @@ const PublicModal: React.FC<Props> = ({
     closeMainModal(e);
   };
 
+  const saveStarHandler = (star: number) => {
+    setStarNum(star);
+  };
+
   return (
     <Base>
       <Wrapper>
@@ -99,15 +103,13 @@ const PublicModal: React.FC<Props> = ({
             <IoIosArrowRoundBack />
           </BackBtn>
           <Title>새 게시글</Title>
-          <Button
-            theme="gray"
-            padding="9px 14px"
-            width="49px"
-            height="14px"
+          <FillButton
+            color="blue"
+            size="md"
             onClick={(e) => savePostHandler(e)}
           >
             작성완료
-          </Button>
+          </FillButton>
         </Header>
         <ImageUpload
           imageURL={imageURL}
@@ -123,7 +125,7 @@ const PublicModal: React.FC<Props> = ({
           googleSearchResult={googleSearchResult}
           setGoogleSearchResult={setGoogleSearchResult}
         />
-        <StarButton starNum={starNum} setStarNum={setStarNum} />
+        <StarButton starNum={starNum} onClick={saveStarHandler} />
         <PostTextArea text={text} setText={setText} />
         <SubModal isOpen={isSubModalOpen}>
           <ConfirmModal

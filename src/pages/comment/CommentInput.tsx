@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Button from '../../components/button/Button';
 import { getToday } from '../../utils/getToday';
 import usePostCommentMutation from '../../hooks/reactQuery/comment/usePostCommentMutation';
 import CommentTextArea from '../../components/textarea/CommentTextArea';
 import useInput from '../../hooks/useInput';
 import { validateComments } from '../../utils/validationComments';
+import FillButton from '../../components/button/FillButton';
 
 interface Props {
   contentId: number | undefined;
@@ -51,17 +51,9 @@ const CommentInput: React.FC<Props> = ({ contentId }) => {
         onBlur={offTextAreaFocus}
         isTextareaFocus={isTextareaFocus}
       />
-      <Button
-        theme="gray"
-        padding="9px 14px"
-        width="60px"
-        height="15px"
-        fontSize="14px"
-        onClick={postCommentHandler}
-        disabled={isPostLoading}
-      >
+      <FillButton color="gray" onClick={postCommentHandler} size="md">
         댓글등록
-      </Button>
+      </FillButton>
     </Base>
   );
 };

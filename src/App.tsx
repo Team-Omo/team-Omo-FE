@@ -10,7 +10,7 @@ import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
 
 const App = () => {
-  const { themeMode, toggleTheme } = useThemeStore();
+  const { themeMode } = useThemeStore();
 
   const { handleError } = useApiError();
 

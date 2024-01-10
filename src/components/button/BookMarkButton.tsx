@@ -1,57 +1,26 @@
 import { motion, stagger, useAnimate, animate } from 'framer-motion';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useEffect, useState } from 'react';
-import usePostBookmarkMutation from '../../hooks/reactQuery/bookmark/usePostBookmarkMutation';
-import useDeleteBookmarkMutation from '../../hooks/reactQuery/bookmark/useDeleteBookmarkMutation';
-import useGetBookmarkQuery from '../../hooks/reactQuery/bookmark/useGetBookmarkQuery';
-import { BookmarkLocationType } from '../../model/interface';
-import _ from 'lodash';
-import toast from 'react-hot-toast';
 import BookMarkIcon from '../../assets/icons/BookMarkIcon';
+import { BookMarkButtonProps } from './types';
+import { BookmarkLocationType } from '../../model/interface';
 
-const randomNumberBetween = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-type AnimationSequence = Parameters<typeof animate>[0];
-
-interface Props {
-  locationId: number | undefined;
-  top?: string;
-  left?: string;
-  bottom?: string;
-  right?: string;
-}
-
-const BookMarkButton: React.FC<Props> = ({
-  locationId,
-  top,
-  left,
-  bottom,
-  right,
-}) => {
+const BookMarkButton = (props: BookMarkButtonProps) => {
+  const {
+    activateBookmarkHandler,
+    deActivateBookmarkHandler,
+    getBookmarkFetching,
+    getBookmarkLoading,
+    data,
+    locationId,
+    position,
+  } = props;
   const [scope, animate] = useAnimate();
   const [isBookMarking, setIsBookMarking] = useState<boolean | undefined>(
     false,
   );
-  const userId = sessionStorage.getItem('userId');
 
-  const { data, refetch, isLoading, isFetching } = useGetBookmarkQuery();
-
-  useEffect(() => {
-    if (!isFetching && !isLoading) {
-      setIsBookMarking(
-        data?.some(
-          (db: BookmarkLocationType) => db.Location.locationId === locationId,
-        ),
-      );
-    }
-  }, [data, isLoading, isFetching, locationId]);
-
-  const { postBookmarkingMutate } = usePostBookmarkMutation(locationId);
-  const { deletebookmarkingMutate } = useDeleteBookmarkMutation(locationId);
-
-  const onButtonClick = _.throttle(() => {
+  const onButtonClick = () => {
     const sparkles = Array.from({ length: 30 });
     const sparklesAnimation: AnimationSequence = sparkles.map((_, index) => [
       `.sparkle-${index}`,
@@ -89,11 +58,7 @@ const BookMarkButton: React.FC<Props> = ({
         duration: 0.000001,
       },
     ]);
-    if (!userId)
-      return toast.error('로그인 후 이용해주세요.', {
-        position: 'bottom-right',
-        duration: 4000,
-      });
+
     if (!isBookMarking) {
       animate([
         ...sparklesReset,
@@ -105,25 +70,25 @@ const BookMarkButton: React.FC<Props> = ({
         ...sparklesFadeOut,
       ]);
       setIsBookMarking(true);
-      postBookmarkingMutate({ locationId });
+      activateBookmarkHandler();
     } else {
       setIsBookMarking(false);
-      deletebookmarkingMutate({ locationId });
+      deActivateBookmarkHandler();
     }
-  }, 400);
+  };
 
   useEffect(() => {
-    userId && refetch();
-  }, [userId]);
+    if (!getBookmarkFetching && !getBookmarkLoading) {
+      setIsBookMarking(
+        data?.some(
+          (db: BookmarkLocationType) => db.Location.locationId === locationId,
+        ),
+      );
+    }
+  }, [data, getBookmarkLoading, getBookmarkFetching, locationId]);
 
   return (
-    <Container
-      ref={scope}
-      $top={top}
-      $left={left}
-      $right={right}
-      $bottom={bottom}
-    >
+    <Container ref={scope} $position={position}>
       <Button
         onClick={onButtonClick}
         whileHover={{ scale: 1.1 }}
@@ -147,17 +112,29 @@ const BookMarkButton: React.FC<Props> = ({
 
 export default BookMarkButton;
 
-const Container = styled.div<{
-  $top?: string;
-  $bottom?: string;
-  $right?: string;
-  $left?: string;
-}>`
-  position: absolute;
-  bottom: ${({ $bottom }) => ($bottom ? $bottom : null)};
-  top: ${({ $top }) => ($top ? $top : null)};
-  right: ${({ $right }) => ($right ? $right : null)};
-  left: ${({ $left }) => ($left ? $left : null)};
+const randomNumberBetween = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+type AnimationSequence = Parameters<typeof animate>[0];
+
+const Container = styled.div<{ $position: `map` | 'info' }>`
+  ${({ $position }) =>
+    $position === 'map'
+      ? css`
+          position: absolute;
+          top: 50px;
+          left: 160px;
+        `
+      : $position === 'info'
+      ? css`
+          position: absolute;
+          top: -10px;
+          right: 0px;
+        `
+      : css`
+          display: inline-flex;
+        `}
 `;
 
 const Button = styled(motion.div)<{ $isBookMarking?: boolean }>`

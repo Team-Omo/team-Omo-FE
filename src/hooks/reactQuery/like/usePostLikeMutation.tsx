@@ -10,10 +10,7 @@ const postLike: MutationFunction<
   return response.data;
 };
 
-const usePostLikeMutation = (
-  postId: number | undefined,
-  setIsLiked: React.Dispatch<React.SetStateAction<boolean>>,
-) => {
+const usePostLikeMutation = (postId: number | undefined) => {
   const queryClient = useQueryClient();
   const mutation = useMutation<void, unknown, { postId: number | undefined }>(
     postLike,
@@ -34,7 +31,6 @@ const usePostLikeMutation = (
       },
       onError: (err, brandId, context) => {
         queryClient.setQueryData(['post', postId], context?.previousPostData);
-        setIsLiked(false);
       },
 
       onSettled: () => {

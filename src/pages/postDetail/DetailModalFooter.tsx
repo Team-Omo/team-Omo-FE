@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import LikeBtn from '../../components/button/LikeButton';
+import LikeButton from '../../components/button/LikeButton';
 import MessageIcon from '../../assets/icons/MessageIcon';
+import useGetLikeQuery from '../../hooks/reactQuery/like/useGetLikeQuery';
+import usePostLikeMutation from '../../hooks/reactQuery/like/usePostLikeMutation';
+import useDeleteLikeMutation from '../../hooks/reactQuery/like/useDeleteLikeMutation';
+import toast from 'react-hot-toast';
 
 interface Props {
   likeCount: number;
@@ -16,10 +20,57 @@ const DetailModalFooter: React.FC<Props> = ({
   commentLength,
   footerRef,
 }) => {
+  const userId = window.sessionStorage.getItem('userId');
+
+  const { data, refetch, isLoading } = useGetLikeQuery();
+
+  const { postMutate, isPostLoading } = usePostLikeMutation(postId);
+  const { deleteMutate, isDeleteLoading } = useDeleteLikeMutation(postId);
+
+  useEffect(() => {
+    userId && refetch();
+  }, [userId, refetch]);
+
+  const activateLikeHandler = (
+    setState: React.Dispatch<React.SetStateAction<boolean | undefined>>,
+  ) => {
+    if (!userId)
+      return toast.error('로그인 후 이용해주세요.', {
+        position: 'bottom-right',
+        duration: 4000,
+      });
+    if (isPostLoading || isDeleteLoading) {
+      return;
+    }
+    postMutate({ postId });
+    setState(true);
+  };
+
+  const deActivateLikeHandler = (
+    setState: React.Dispatch<React.SetStateAction<boolean | undefined>>,
+  ) => {
+    if (!userId)
+      return toast.error('로그인 후 이용해주세요.', {
+        position: 'bottom-right',
+        duration: 4000,
+      });
+    if (isPostLoading || isDeleteLoading) {
+      return;
+    }
+    deleteMutate({ postId });
+    setState(false);
+  };
+
   return (
     <Footer ref={footerRef}>
       <FooterItem $color="red">
-        <LikeBtn postId={postId} />
+        <LikeButton
+          activateLikeHandler={activateLikeHandler}
+          deActivateLikeHandler={deActivateLikeHandler}
+          isLoading={isLoading}
+          data={data}
+          postId={postId}
+        />
         <span>{likeCount}</span>
       </FooterItem>
       <FooterItem $color="blue">

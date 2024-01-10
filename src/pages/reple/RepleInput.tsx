@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Button from '../../components/button/Button';
 import { getToday } from '../../utils/getToday';
 import usePostRepleMutation from '../../hooks/reactQuery/replies/usePostRepleMutation';
 import CommentTextArea from '../../components/textarea/CommentTextArea';
 import useInput from '../../hooks/useInput';
 import { validateComments } from '../../utils/validationComments';
+import FillButton from '../../components/button/FillButton';
 
 interface Props {
   postId: number | undefined;
@@ -58,28 +58,12 @@ const RepleInput: React.FC<Props> = ({
           isTextareaFocus={isTextareaFocus}
         />
         <ButtonConatiner>
-          <Button
-            theme="gray"
-            padding="9px 14px"
-            width="50px"
-            height="15px"
-            fontSize="14px"
-            disabled={isPostLoading}
-            onClick={toggleRepleInputHandler}
-          >
+          <FillButton onClick={toggleRepleInputHandler} size="sm" color="gray">
             취소
-          </Button>
-          <Button
-            theme="blue"
-            padding="9px 14px"
-            width="60px"
-            height="15px"
-            fontSize="14px"
-            onClick={postCommentHandler}
-            disabled={isPostLoading}
-          >
+          </FillButton>
+          <FillButton onClick={postCommentHandler} size="sm" color="blue">
             댓글등록
-          </Button>
+          </FillButton>
         </ButtonConatiner>
       </Base>
     </>

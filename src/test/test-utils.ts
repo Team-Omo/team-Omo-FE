@@ -1,8 +1,14 @@
 import { cleanup, render } from '@testing-library/react';
 import { afterEach } from 'vitest';
 
-// 이거 추가안하면 expect, toBeInTheDocument 등의 jest-dom 함수들이 작동안함
 import '@testing-library/jest-dom';
+
+import * as globalStorybookConfig from '../../.storybook/preview';
+
+import { setProjectAnnotations } from '@storybook/react';
+
+// @ts-ignore
+setProjectAnnotations(globalStorybookConfig);
 
 afterEach(() => {
   cleanup();
@@ -10,6 +16,7 @@ afterEach(() => {
 
 function customRender(ui: React.ReactElement, options = {}) {
   return render(ui, {
+    // wrap provider(s) here if needed
     wrapper: ({ children }) => children,
     ...options,
   });
@@ -18,4 +25,5 @@ function customRender(ui: React.ReactElement, options = {}) {
 export * from '@testing-library/react';
 export { default as userEvent } from '@testing-library/user-event';
 
+// override render export
 export { customRender as render };

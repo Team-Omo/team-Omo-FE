@@ -2,15 +2,17 @@
 export const LightTheme = {
   color: {
     primary: '#F97393',
+    primaryHover: '#f84972',
     text: '#101010',
     sub: '#595959',
-    ui: '#7B7B7B',
     sub2: '#808080',
+    ui: '#7B7B7B',
     btnBg: '#B1B1B1',
     border: '#D9D9D9',
     border2: '#D9D9D9',
     hover: '#F2F4F7',
     link: '#44A5FF',
+    linkHover: '#148dff',
     error: '#FF3263',
     bg: '#fff',
     cardBorder: '#d9d9d9',
@@ -28,6 +30,7 @@ export const LightTheme = {
 export const DarkTheme = {
   color: {
     primary: '#F97393',
+    primaryHover: '#f84972',
     text: '#fff',
     sub: '#B3B3B3',
     ui: '#666666',
@@ -37,6 +40,7 @@ export const DarkTheme = {
     border2: '#404040',
     hover: '#32161D',
     link: '#44A5FF',
+    linkHover: '#148dff',
     error: '#FF3263',
     bg: '#1B1B20',
     bg2: '#252429',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { HotPostsType } from '../../../../model/interface';
 import LocationIcon from '../../../../assets/icons/LocationIcon';
@@ -12,6 +12,10 @@ import { HiArrowNarrowRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import useMapStore from '../../../../store/location/googleMapStore';
 import usePlaceStore from '../../../../store/location/placeStore';
+import useGetBookmarkQuery from '../../../../hooks/reactQuery/bookmark/useGetBookmarkQuery';
+import usePostBookmarkMutation from '../../../../hooks/reactQuery/bookmark/usePostBookmarkMutation';
+import useDeleteBookmarkMutation from '../../../../hooks/reactQuery/bookmark/useDeleteBookmarkMutation';
+import toast from 'react-hot-toast';
 interface Props {
   googleSearchResult: google.maps.places.PlaceResult | null;
   post: HotPostsType;
@@ -22,6 +26,46 @@ const Info: React.FC<Props> = ({ googleSearchResult, post }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { selectedLocation, setCurrentLocation } = useMapStore();
   const { setPlace } = usePlaceStore();
+
+  const userId = sessionStorage.getItem('userId');
+
+  const {
+    data,
+    refetch: getBookmarkRefetch,
+    isLoading: getBookmarkLoading,
+    isFetching: getBookmarkFetching,
+  } = useGetBookmarkQuery(userId);
+
+  const { postBookmarkingMutate } = usePostBookmarkMutation(
+    Location.locationId,
+  );
+  const { deletebookmarkingMutate } = useDeleteBookmarkMutation(
+    Location.locationId,
+  );
+
+  const activateBookmarkHandler = () => {
+    if (getBookmarkFetching || getBookmarkLoading) return;
+    if (!userId)
+      return toast.error('로그인 후 이용해주세요.', {
+        position: 'bottom-right',
+        duration: 4000,
+      });
+    postBookmarkingMutate({ locationId: Location.locationId });
+  };
+
+  const deActivateBookmarkHandler = () => {
+    if (getBookmarkFetching || getBookmarkLoading) return;
+    if (!userId)
+      return toast.error('로그인 후 이용해주세요.', {
+        position: 'bottom-right',
+        duration: 4000,
+      });
+    deletebookmarkingMutate({ locationId: Location.locationId });
+  };
+
+  useEffect(() => {
+    userId && getBookmarkRefetch();
+  }, [userId]);
 
   const detailToggleHandler = () => {
     setIsOpen(!isOpen);
@@ -45,9 +89,13 @@ const Info: React.FC<Props> = ({ googleSearchResult, post }) => {
         <PlaceNameContainer>{Location.storeName}</PlaceNameContainer>
         <CategoryName>{Category.categoryName}</CategoryName>
         <BookMarkButton
+          activateBookmarkHandler={activateBookmarkHandler}
+          deActivateBookmarkHandler={deActivateBookmarkHandler}
+          getBookmarkLoading={getBookmarkLoading}
+          getBookmarkFetching={getBookmarkFetching}
+          data={data}
           locationId={Location.locationId}
-          right="0"
-          top="-10px"
+          position="info"
         />
       </Header>
       <AddressNameContainer>

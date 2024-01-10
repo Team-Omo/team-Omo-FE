@@ -18,6 +18,8 @@ import usePlaceStore from '../../../store/location/placeStore';
 import BookMarkLocationButton from '../../../components/button/mapActionButton/BookMarkLocationButton';
 import BookmarkLocationMarker from '../../../components/marker/BookmarkLocationMarker';
 import useBookMarkPlaceStore from '../../../store/location/bookMarkPlaceStore';
+import toast from 'react-hot-toast';
+import { getCurrentCoords } from '../../../utils/kakao';
 
 interface Props {
   placeDatas: LocationType[] | undefined;
@@ -34,10 +36,13 @@ const MapGoogle: React.FC<Props> = ({
 }) => {
   const [mapLevel, setMapLevel] = useState(17);
   const { place } = usePlaceStore();
-  const { map, setMap, currentLocation, setMapBounds } = useMapStore();
+  const { map, setMap, currentLocation, setCurrentLocation, setMapBounds } =
+    useMapStore();
   const { themeMode } = useThemeStore();
+  const { isShowBookMarkPlace, toggleBookmarkDisplay } =
+    useBookMarkPlaceStore();
 
-  const { isShowBookMarkPlace } = useBookMarkPlaceStore();
+  const currentUser = sessionStorage.getItem('userId');
 
   const containerStyle = {
     width:
@@ -65,6 +70,17 @@ const MapGoogle: React.FC<Props> = ({
     const currentLevel = map?.getZoom();
     if (!currentLevel) return;
     setMapLevel(currentLevel + 1);
+  };
+
+  const toggleBookMarkerHandler = () => {
+    if (!currentUser) {
+      toast.error('로그인 후 이용해주세요.', {
+        position: 'bottom-right',
+        duration: 4000,
+      });
+      return;
+    }
+    toggleBookmarkDisplay();
   };
 
   const { isLoaded } = useJsApiLoader({
@@ -95,6 +111,22 @@ const MapGoogle: React.FC<Props> = ({
   const onUnmount = useCallback(function callback(map: google.maps.Map) {
     setMap(null);
   }, []);
+
+  const moveMyLocation = async () => {
+    try {
+      toast.loading('현재 위치를 업데이트 중입니다...', {
+        position: 'bottom-right',
+        id: '1',
+      });
+      const { latitude, longitude } = await getCurrentCoords();
+      setCurrentLocation({ lat: latitude, lng: longitude });
+    } finally {
+      toast.remove('1');
+      toast.success('현재 위치를 업데이트하였습니다.', {
+        position: 'bottom-right',
+      });
+    }
+  };
 
   return isLoaded ? (
     <CustomMap
@@ -137,11 +169,15 @@ const MapGoogle: React.FC<Props> = ({
         bookmarkPlaces?.map((db) => (
           <BookmarkLocationMarker key={db.Location.locationId} placeDb={db} />
         ))}
-      <CurrentLocationButton />
-      <BookMarkLocationButton />
+      <CurrentLocationButton moveMyLocation={moveMyLocation} position="map" />
+      <BookMarkLocationButton
+        toggleBookMarkerHandler={toggleBookMarkerHandler}
+        position="map"
+      />
       <LevelButton
         downMapLevelHandler={downMapLevelHandler}
         upMapLevelHandler={upMapLevelHandler}
+        position="map"
       />
     </CustomMap>
   ) : (

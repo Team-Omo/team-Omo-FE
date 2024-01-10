@@ -1,31 +1,17 @@
 import React from 'react';
 import { MdMyLocation } from 'react-icons/md';
-import styled from 'styled-components';
-import { getCurrentCoords } from '../../../utils/kakao';
-import useMapStore from '../../../store/location/googleMapStore';
-import toast from 'react-hot-toast';
+import styled, { css } from 'styled-components';
 
-const CurrentLocationButton = () => {
-  const { setCurrentLocation } = useMapStore();
+interface Props {
+  moveMyLocation: () => void;
+  position?: string;
+}
 
-  const moveMyLocation = async () => {
-    try {
-      toast.loading('현재 위치를 업데이트 중입니다...', {
-        position: 'bottom-right',
-        id: '1',
-      });
-      const { latitude, longitude } = await getCurrentCoords();
-      setCurrentLocation({ lat: latitude, lng: longitude });
-    } finally {
-      toast.remove('1');
-      toast.success('현재 위치를 업데이트하였습니다.', {
-        position: 'bottom-right',
-      });
-    }
-  };
+const CurrentLocationButton = (props: Props) => {
+  const { moveMyLocation, position } = props;
 
   return (
-    <BtnWrapper onClick={moveMyLocation}>
+    <BtnWrapper onClick={moveMyLocation} $position={position}>
       <MdMyLocation />
     </BtnWrapper>
   );
@@ -33,11 +19,16 @@ const CurrentLocationButton = () => {
 
 export default CurrentLocationButton;
 
-const BtnWrapper = styled.div`
+const BtnWrapper = styled.div<{ $position?: string }>`
   z-index: 3;
-  position: absolute;
-  right: 45px;
-  top: 90px;
+  ${({ $position }) =>
+    $position === 'map'
+      ? css`
+          position: absolute;
+          right: 45px;
+          top: 90px;
+        `
+      : css`null`};
 
   display: flex;
   justify-content: center;

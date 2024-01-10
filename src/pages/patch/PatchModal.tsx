@@ -109,6 +109,10 @@ const PatchModal: React.FC<Props> = ({
     }
   };
 
+  const saveStarHandler = (star: number) => {
+    setStarNum(star);
+  };
+
   return (
     <Base>
       <Wrapper>
@@ -133,7 +137,7 @@ const PatchModal: React.FC<Props> = ({
           googleSearchResult={googleSearchResult}
           setGoogleSearchResult={setGoogleSearchResult}
         />
-        <StarButton starNum={starNum} setStarNum={setStarNum} />
+        <StarButton starNum={starNum} onClick={saveStarHandler} />
         <PostTextArea text={text} setText={setText} />
         <SubModal isOpen={isConfirmModalOpen}>
           <ConfirmModal

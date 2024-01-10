@@ -1,14 +1,11 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaStar } from 'react-icons/fa';
 import { FaRegStar } from 'react-icons/fa';
+import { StarButtonProps } from './types';
 
-interface Props {
-  starNum: number;
-  setStarNum: React.Dispatch<SetStateAction<number>>;
-}
-
-const StarButton: React.FC<Props> = ({ starNum, setStarNum }) => {
+const StarButton = (props: StarButtonProps) => {
+  const { starNum, onClick } = props;
   const [hover, setHover] = useState(0);
   const starArr = [1, 2, 3, 4, 5];
 
@@ -17,7 +14,7 @@ const StarButton: React.FC<Props> = ({ starNum, setStarNum }) => {
       {starArr.map((idx) => (
         <BtnWrapper
           key={idx}
-          onClick={() => setStarNum(idx)}
+          onClick={() => onClick(idx)}
           onMouseEnter={() => setHover(idx)}
           onMouseLeave={() => setHover(0)}
         >

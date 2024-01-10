@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PencilIcon from '../../../assets/icons/PencilIcon';
-import Button from '../../../components/button/Button';
+import FillButton from '../../../components/button/FillButton';
 
 interface Props {
   openPostModalHandler: (
@@ -13,10 +13,9 @@ const Header: React.FC<Props> = ({ openPostModalHandler }) => {
   return (
     <Base onClick={openPostModalHandler}>
       <Title>게시글</Title>
-      <Button theme="blue" width="91px" height="32px" padding="none">
-        <PencilIcon />
+      <FillButton color="blue" size="lg" icon={<PencilIcon />}>
         <span>새 게시글</span>
-      </Button>
+      </FillButton>
     </Base>
   );
 };

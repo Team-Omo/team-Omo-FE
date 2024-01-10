@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../../components/button/Button';
+import OutlineButton from '../../components/button/OutlineButton';
 
 interface Props {
   closeModalHandler: (
@@ -15,13 +16,13 @@ const ConfirmModal: React.FC<Props> = ({
   closeModalHandler,
   clearPostHandler,
 }) => {
-  const onClickYesBtn = (
+  const onClickNoBtn = (
     e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
   ) => {
     closeModalHandler(e);
   };
 
-  const onClickNoBtn = (
+  const onClickYesBtn = (
     e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
   ) => {
     clearPostHandler(e);
@@ -33,28 +34,12 @@ const ConfirmModal: React.FC<Props> = ({
       <Title>😥정말 나가시겠어요?</Title>
       <SubText>저장하지 않은 내용을 잃어버릴 수 있어요.</SubText>
       <BtnWrapper>
-        <Button
-          outlineColor="blue"
-          padding="10px 5px"
-          width="100px"
-          height="15px"
-          fontSize="14px"
-          fontWeight="700"
-          onClick={(e) => onClickYesBtn(e)}
-        >
-          계속 작성하기
-        </Button>
-        <Button
-          outlineColor="red"
-          padding="10px 5px"
-          width="45px"
-          height="15px"
-          fontSize="14px"
-          fontWeight="700"
-          onClick={(e) => onClickNoBtn(e)}
-        >
-          나가기
-        </Button>
+        <OutlineButton color="red" size="md" onClick={(e) => onClickYesBtn(e)}>
+          예
+        </OutlineButton>
+        <OutlineButton color="blue" size="md" onClick={(e) => onClickNoBtn(e)}>
+          아니오
+        </OutlineButton>
       </BtnWrapper>
     </Base>
   );
