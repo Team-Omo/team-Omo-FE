@@ -5,9 +5,7 @@ import Dropdown from './Dropdown';
 import RepleItem from '../reple/RepleItem';
 import RepleInput from '../reple/RepleInput';
 import { useNavigate } from 'react-router-dom';
-import { Virtuoso } from 'react-virtuoso';
 
-//TODO 유저 데이터
 const CommentItem: React.FC<{
   comment: CommentType;
   postId: number;

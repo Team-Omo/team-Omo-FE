@@ -26,9 +26,11 @@ const useLocationQuery = (
     () => fetchLocations(categoryName, qa, pa, ha, oa),
     {
       keepPreviousData: true,
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      enabled: false,
+      enabled:
+        oa === undefined &&
+        ha === undefined &&
+        pa === undefined &&
+        qa === undefined,
     },
   );
 };

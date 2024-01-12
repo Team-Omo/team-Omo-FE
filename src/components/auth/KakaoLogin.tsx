@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 
 const KakaoLogin: React.FC = () => {
+  
   const loginWithKakao = () => {
     window.location.href = `${import.meta.env.VITE_APP_SERVER_AUTH_URL}/kakao`;
   };

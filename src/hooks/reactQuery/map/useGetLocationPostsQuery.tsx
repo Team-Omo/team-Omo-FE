@@ -20,7 +20,7 @@ const useGetLocationPostsQuery = (
   useQuery(
     ['locations', locationId],
     () => getLocations(locationId, latitude, longitude),
-    { enabled: false },
+    { enabled: false, staleTime: 60000, cacheTime: 300000 },
   );
 
 export default useGetLocationPostsQuery;

@@ -16,23 +16,30 @@ const usePostLikeMutation = (postId: number | undefined) => {
     postLike,
     {
       onMutate: async ({ postId }) => {
+        // 진행중인 refetch가 있다면 취소시킨다.
         queryClient.cancelQueries(['posts', postId]);
+
+        // 이전 데이터를 저장해둔다.
         const previousPostData: PostDetailType | undefined =
           queryClient.getQueryData(['posts', postId]);
 
+        // 미리 UI에 적용시켜 놓음.
         if (previousPostData) {
-          const updatedPostDat = {
+          const updatedPostData = {
             ...previousPostData,
             likeCount: previousPostData.likeCount + 1,
           };
-          queryClient.setQueryData(['posts', postId], updatedPostDat);
+          queryClient.setQueryData(['posts', postId], updatedPostData);
         }
         return { previousPostData };
       },
+
+      // 에러가 발생할 경우 이전 데이터로 롤백시킨다.
       onError: (err, brandId, context) => {
         queryClient.setQueryData(['post', postId], context?.previousPostData);
       },
 
+      // 성공하거나 실패할 경우 쿼리를 무효화시켜 최신 데이터를 받아와준다.
       onSettled: () => {
         queryClient.invalidateQueries(['posts', postId]);
       },

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import CommentItem from '../comment/CommentItem';
 import CommentInput from '../comment/CommentInput';
 import { CommentType } from '../../model/interface';
-import { Virtuoso } from 'react-virtuoso';
 
 interface Props {
   postId: number;

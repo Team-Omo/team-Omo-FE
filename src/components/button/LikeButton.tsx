@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { LikePostsType } from '../../model/interface';
-import _ from 'lodash';
 import LikeEmptyIcon from '../../assets/icons/LikeEmptyIcon';
 import LikeFillIcon from '../../assets/icons/LikeFillIcon';
 

@@ -55,6 +55,8 @@ const useGetAllContentsQuery = (
           ? lastPage[lastPage.length - 1].postId
           : undefined;
       },
+      staleTime: 60000,
+      cacheTime: 300000,
     },
   );
 

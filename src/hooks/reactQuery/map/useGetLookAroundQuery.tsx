@@ -20,6 +20,9 @@ const useGetLookAroundQuery = (
   oa: number | null,
   pa: number | null,
   qa: number | null,
-) => useQuery('Locations', () => getLocations(categoryName, oa, ha, pa, qa));
+) =>
+  useQuery('Locations', () => getLocations(categoryName, oa, ha, pa, qa), {
+    enabled: oa !== null && ha !== null && pa !== null && qa !== null,
+  });
 
 export default useGetLookAroundQuery;
