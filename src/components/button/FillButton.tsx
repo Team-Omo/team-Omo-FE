@@ -22,14 +22,22 @@ interface ButtonProps {
 
 const Button = styled.button<ButtonProps>`
   box-sizing: content-box;
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
+  gap: 5px;
 
   border: none;
   border-radius: 8px;
   ${({ $color }) =>
-    $color === 'blue'
+    $color === 'primary'
+      ? css`
+          background: ${({ theme }) => theme.color.subPrimary};
+          &:hover {
+            background: ${({ theme }) => theme.color.subPrimaryHover};
+          }
+        `
+      : $color === 'blue'
       ? css`
           background: ${({ theme }) => theme.color.link};
           &:hover {
@@ -47,9 +55,8 @@ const Button = styled.button<ButtonProps>`
   ${({ $size }) =>
     $size === 'sm'
       ? css`
-          width: 61px;
-          height: 14px;
-          padding: 9px 0;
+          width: 70px;
+          height: 25px;
         `
       : $size === 'md'
       ? css`
@@ -66,6 +73,9 @@ const Button = styled.button<ButtonProps>`
     color: #fff;
     font-size: 14px;
     font-weight: 700;
+  }
+  svg {
+    color: #fff;
   }
   cursor: pointer;
 `;

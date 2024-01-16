@@ -11,6 +11,7 @@ import Modal from '../../components/Modal/Modal';
 import PatchModal from '../patch/PatchModal';
 import useModalCtr from '../../hooks/useModalCtr';
 import { MeatballIcon } from '../../assets/icons/MeatballIcon';
+import Profile from '../../components/profile/Profile';
 
 const DetailModalHeader: React.FC<{
   userName: string;
@@ -41,17 +42,27 @@ const DetailModalHeader: React.FC<{
     handleModalClose: handleConfirmModalClose,
     handleModalOpen: handleConfirmModalOpen,
   } = useModalCtr();
-  const navigate = useNavigate();
 
-  const onClickMoveUserPage = () => {
-    const checkUserId = sessionStorage.getItem('userId');
-    !checkUserId
-      ? toast.error('로그인 후 이용해주세요.', {
-          position: 'bottom-right',
-          duration: 4000,
-        })
-      : navigate(`/userpage/${userName}`);
+  const [isShow, setIsShow] = React.useState<boolean>(false);
+  // const navigate = useNavigate();
+
+  // const onClickMoveUserPage = () => {
+  //   const checkUserId = sessionStorage.getItem('userId');
+  //   !checkUserId
+  //     ? toast.error('로그인 후 이용해주세요.', {
+  //         position: 'bottom-right',
+  //         duration: 4000,
+  //       })
+  //     : navigate(`/userpage/${userName}`);
+  // };
+
+  const showProfile = () => {
+    setIsShow(true);
   };
+  const hideProfile = () => {
+    setIsShow(false);
+  };
+
   const { deleteMutate } = useDeleteContentMutation();
 
   const onClickDelete = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -62,11 +73,21 @@ const DetailModalHeader: React.FC<{
   return (
     <>
       <Base>
-        <UserProfile $userProfile={userProfile} onClick={onClickMoveUserPage} />
+        <UserProfile
+          $userProfile={userProfile}
+          onMouseEnter={showProfile}
+          onMouseLeave={hideProfile}
+          $isShow={isShow}
+        >
+          {isShow && (
+            <Profile userName={userName} userProfileImg={userProfile} />
+          )}
+        </UserProfile>
         <UserInfoContainer>
-          <UserName onClick={onClickMoveUserPage}>{userName}</UserName>
+          <UserName>{userName}</UserName>
           <CreationDate>{createdAt.split('T')[0]}</CreationDate>
         </UserInfoContainer>
+
         {userId === currentUserId && (
           <Dropdown
             isDropdownOpen={isDropdownOpen}
@@ -112,16 +133,20 @@ const Base = styled.div`
   width: 100%;
 `;
 
-const UserProfile = styled.div<{ $userProfile: string }>`
+const UserProfile = styled.div<{ $userProfile: string; $isShow: boolean }>`
   background-image: ${({ $userProfile }) => `url(${$userProfile})`};
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   width: 50px;
   height: 50px;
-  border: 2px solid ${({ theme }) => theme.color.border};
+  border: 2px solid
+    ${({ $isShow, theme }) =>
+      $isShow ? theme.color.primary : theme.color.border};
   border-radius: 100%;
+  transition: border 0.3s ease-in-out;
   cursor: pointer;
+  position: relative;
 `;
 
 const UserInfoContainer = styled.div`

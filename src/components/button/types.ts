@@ -2,7 +2,7 @@ import { BookmarkLocationType } from '../../model/interface';
 
 export interface ButtonProps {
   color: 'red' | 'blue';
-  size: 'md' | 'lg';
+  size: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => void;
 }
@@ -27,5 +27,5 @@ export interface FillButtonProps {
   children: React.ReactNode;
   icon?: React.ReactNode;
   size: 'sm' | 'md' | 'lg';
-  color: 'gray' | 'blue';
+  color: 'gray' | 'blue' | 'primary';
 }

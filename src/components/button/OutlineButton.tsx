@@ -24,7 +24,6 @@ const Button = styled.button<ButtonStyleProps>`
   justify-content: center;
   align-items: center;
 
-  padding: 10px;
   background: ${({ theme }) => theme.color.cardBg};
   border-radius: 8px;
 
@@ -50,12 +49,19 @@ const Button = styled.button<ButtonStyleProps>`
         `};
 
   ${({ $size }) =>
-    $size === 'md'
+    $size === 'sm'
+      ? css`
+          width: 60px;
+          height: 15px;
+        `
+      : $size === 'md'
       ? css`
           width: 80px;
+          padding: 10px;
         `
       : css`
           width: 106px;
+          padding: 10px;
         `}
 
   span {

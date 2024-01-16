@@ -3,6 +3,8 @@ export const LightTheme = {
   color: {
     primary: '#F97393',
     primaryHover: '#f84972',
+    subPrimary: '#f9b2c2',
+    subPrimaryHover: '#f991a9',
     text: '#101010',
     sub: '#595959',
     sub2: '#808080',
@@ -31,6 +33,8 @@ export const DarkTheme = {
   color: {
     primary: '#F97393',
     primaryHover: '#f84972',
+    subPrimary: '#f9b2c2',
+    subPrimaryHover: '#f991a9',
     text: '#fff',
     sub: '#B3B3B3',
     ui: '#666666',
